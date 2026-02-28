@@ -15,14 +15,20 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.camila.winetasting"
+      "bundleIdentifier": "com.camila.winetasting",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#800020"
       },
-      "package": "com.camila.winetasting"
+      "package": "com.camila.winetasting",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,6 +43,12 @@
       ],
       "expo-font",
       "expo-mail-composer"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a45e5463-5f18-4e1a-95b2-6028ccb8d2c1"
+      }
+    }
   }
 }

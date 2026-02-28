@@ -27,10 +27,10 @@ const SOMMELIER_PROMPT = `You are a master sommelier. Analyze this wine bottle i
 }
 
 Rules:
-- characteristics.aromas: 5-8 aromas CORRECT for this specific wine
-- characteristics.flavors: 5-8 flavors CORRECT for this specific wine
-- decoys.aromas: 8-10 aromas PLAUSIBLE for wine but WRONG for this one
-- decoys.flavors: 8-10 flavors PLAUSIBLE for wine but WRONG for this one
+- characteristics.aromas: exactly 3 aromas CORRECT for this specific wine
+- characteristics.flavors: exactly 3 flavors CORRECT for this specific wine
+- decoys.aromas: exactly 5 aromas PLAUSIBLE for wine but WRONG for this one
+- decoys.flavors: exactly 5 flavors PLAUSIBLE for wine but WRONG for this one
 - Make decoys tricky and believable
 - Use lowercase for all aromas and flavors
 - Be specific (e.g., "black cherry" not "cherry", "toasted oak" not "oak")`;

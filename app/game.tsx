@@ -198,7 +198,10 @@ export default function GameScreen() {
         )}
         <View style={styles.sectionRow}>
           <Image source={require('../assets/icons/icon-nose.png')} style={styles.sectionIcon} resizeMode="contain" />
-          <Text style={styles.sectionLabel}>Nose (Aromas)</Text>
+          <View style={styles.sectionTextWrap}>
+            <Text style={styles.sectionLabel}>Nose (Aromas)</Text>
+          </View>
+          <Text style={styles.counterBadge}>{selectedAromas.length}/3</Text>
         </View>
         <View style={styles.chipGrid}>
           {shuffledAromas.map(aroma => (
@@ -217,7 +220,10 @@ export default function GameScreen() {
 
         <View style={styles.sectionRow}>
           <Image source={require('../assets/icons/icon-flavors.png')} style={styles.sectionIcon} resizeMode="contain" />
-          <Text style={styles.sectionLabel}>Palate (Flavors)</Text>
+          <View style={styles.sectionTextWrap}>
+            <Text style={styles.sectionLabel}>Palate (Flavors)</Text>
+          </View>
+          <Text style={styles.counterBadge}>{selectedFlavors.length}/3</Text>
         </View>
         <View style={styles.chipGrid}>
           {shuffledFlavors.map(flavor => (
@@ -404,6 +410,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'rgba(255,255,255,0.45)',
     marginTop: 2,
+  },
+  counterBadge: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: COLORS.gold,
+    marginLeft: 'auto',
   },
   chipGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: {

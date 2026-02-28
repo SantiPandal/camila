@@ -49,7 +49,7 @@ export default function HomeScreen() {
         >
           <Image source={require('../assets/icons/icon-camera.png')} style={styles.cameraIconImg} />
           <Text style={styles.cameraText}>Take a Photo</Text>
-          <Text style={styles.cameraHint}>Snap the wine bottle</Text>
+          <Text style={styles.cameraHint}>Snap the bottle or the name from the menu</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
