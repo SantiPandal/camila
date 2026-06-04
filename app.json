@@ -17,7 +17,10 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.camila.winetasting",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSMicrophoneUsageDescription": "Camila uses your microphone to record voice feedback about wines.",
+        "NSPhotoLibraryUsageDescription": "Camila needs access to your photos to select wine bottle images.",
+        "NSCameraUsageDescription": "Camila needs your camera to photograph wine bottles."
       }
     },
     "android": {
@@ -38,7 +41,8 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "Camila needs your camera to photograph wine bottles"
+          "cameraPermission": "Camila needs your camera to photograph wine bottles.",
+          "photoLibraryPermission": "Camila needs access to your photos to select wine bottle images."
         }
       ],
       "expo-font",
