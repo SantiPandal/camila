@@ -1,69 +1,34 @@
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
-import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
-import { useGame } from '../src/context/GameContext';
-import { COLORS } from '../src/constants/theme';
-import FeedbackButton from '../src/components/FeedbackButton';
 
-export default function HomeScreen() {
+export default function HubScreen() {
   const router = useRouter();
-  const { setWineImage } = useGame();
 
-  const pickImage = async (useCamera: boolean) => {
-    const options: ImagePicker.ImagePickerOptions = {
-      mediaTypes: ['images'],
-      quality: 0.8,
-      base64: true,
-    };
-
-    let result;
-    if (useCamera) {
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== 'granted') return;
-      result = await ImagePicker.launchCameraAsync(options);
-    } else {
-      result = await ImagePicker.launchImageLibraryAsync(options);
-    }
-
-    if (!result.canceled && result.assets[0]) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      setWineImage(result.assets[0].uri);
-      (global as any).__wineBase64 = result.assets[0].base64;
-      router.push('/analyzing');
-    }
+  const openApp = (route: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push(route as any);
   };
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      <Text style={styles.title}>Camila</Text>
-      <Text style={styles.subtitle}>The Wine Guessing Game</Text>
+      <Text style={styles.title}>Valencia</Text>
+      <Text style={styles.subtitle}>Mini Apps</Text>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.cameraButton}
-          onPress={() => pickImage(true)}
-          activeOpacity={0.8}
-        >
-          <Image source={require('../assets/icons/icon-camera.png')} style={styles.cameraIconImg} />
-          <Text style={styles.cameraText}>Take a Photo</Text>
-          <Text style={styles.cameraHint}>Snap the bottle or the name from the menu</Text>
+      <View style={styles.grid}>
+        <TouchableOpacity style={[styles.card, styles.cardCamila]} onPress={() => openApp('/home')} activeOpacity={0.8}>
+          <Text style={styles.cardEmoji}>🍷</Text>
+          <Text style={styles.cardTitle}>Camila</Text>
+          <Text style={styles.cardDesc}>The Wine Guessing Game</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.galleryButton}
-          onPress={() => pickImage(false)}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.galleryText}>Choose from Gallery</Text>
+        <TouchableOpacity style={[styles.card, styles.cardAmbiciosa]} onPress={() => openApp('/ambiciosa')} activeOpacity={0.8}>
+          <Text style={styles.cardEmoji}>🎲</Text>
+          <Text style={styles.cardTitle}>Ambisiosa</Text>
+          <Text style={styles.cardDesc}>Cubilete — Marcador</Text>
         </TouchableOpacity>
-      </View>
-
-      <View style={styles.footerRow}>
-        <Text style={styles.footer}>Photograph a bottle. Guess the flavors. Win.</Text>
-        <FeedbackButton />
       </View>
     </View>
   );
@@ -72,72 +37,54 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.burgundy,
+    backgroundColor: '#1a1a2e',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: 24,
   },
   title: {
     fontFamily: 'Sacramento_400Regular',
-    fontSize: 72,
-    color: COLORS.white,
+    fontSize: 64,
+    color: '#FFFFFF',
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 16,
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: 60,
-    letterSpacing: 1,
+    color: 'rgba(255,255,255,0.5)',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+    marginBottom: 48,
   },
-  buttonContainer: {
+  grid: {
     width: '100%',
-    alignItems: 'center',
+    gap: 16,
   },
-  cameraButton: {
-    backgroundColor: COLORS.white,
-    borderRadius: 24,
-    paddingVertical: 32,
-    paddingHorizontal: 40,
-    width: '100%',
+  card: {
+    borderRadius: 20,
+    padding: 24,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    elevation: 8,
+    borderWidth: 1,
   },
-  cameraIconImg: {
-    width: 96,
-    height: 96,
+  cardCamila: {
+    backgroundColor: 'rgba(128,0,32,0.3)',
+    borderColor: 'rgba(128,0,32,0.5)',
+  },
+  cardAmbiciosa: {
+    backgroundColor: 'rgba(13,59,37,0.4)',
+    borderColor: 'rgba(13,59,37,0.6)',
+  },
+  cardEmoji: {
+    fontSize: 48,
     marginBottom: 12,
   },
-  cameraText: {
+  cardTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: COLORS.gray800,
+    color: '#FFFFFF',
+    marginBottom: 4,
   },
-  cameraHint: {
+  cardDesc: {
     fontSize: 14,
-    color: COLORS.gray400,
-    marginTop: 4,
-  },
-  galleryButton: {
-    marginTop: 20,
-    paddingVertical: 14,
-  },
-  galleryText: {
-    fontSize: 16,
-    color: 'rgba(255,255,255,0.8)',
-    textDecorationLine: 'underline',
-  },
-  footerRow: {
-    position: 'absolute',
-    bottom: 40,
-    alignItems: 'center',
-  },
-  footer: {
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.4)',
-    letterSpacing: 0.5,
+    color: 'rgba(255,255,255,0.6)',
   },
 });

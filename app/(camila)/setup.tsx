@@ -5,19 +5,19 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { useGame } from '../src/context/GameContext';
-import { COLORS } from '../src/constants/theme';
-import { Player } from '../src/types';
+import { useGame } from '../../src/context/GameContext';
+import { COLORS } from '../../src/constants/theme';
+import { Player } from '../../src/types';
 
 export default function SetupScreen() {
   const router = useRouter();
   const { wineAnalysis, setPlayers, setTimerDuration, timerDuration, prepareGameOptions, resetGame } = useGame();
 
   const wineIcons = {
-    red: require('../assets/icons/icon-wine-red.png'),
-    white: require('../assets/icons/icon-wine-white.png'),
-    sparkling: require('../assets/icons/icon-champagne.png'),
-    'rosé': require('../assets/icons/icon-wine-red.png'),
+    red: require('../../assets/icons/icon-wine-red.png'),
+    white: require('../../assets/icons/icon-wine-white.png'),
+    sparkling: require('../../assets/icons/icon-champagne.png'),
+    'rosé': require('../../assets/icons/icon-wine-red.png'),
   } as const;
   const wineIcon = wineIcons[wineAnalysis?.wine_type ?? 'red'];
   const [playerNames, setPlayerNames] = useState(['', '']);
@@ -64,7 +64,7 @@ export default function SetupScreen() {
     >
       <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-        <TouchableOpacity onPress={() => { resetGame(); router.dismissAll(); }} activeOpacity={0.7}>
+        <TouchableOpacity onPress={() => { resetGame(); router.replace('/home'); }} activeOpacity={0.7}>
           <Text style={styles.title}>Camila</Text>
         </TouchableOpacity>
 

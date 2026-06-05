@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Image, StatusBar, Easing } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useGame } from '../src/context/GameContext';
-import { analyzeWine } from '../src/services/wine-analyzer';
-import { COLORS } from '../src/constants/theme';
+import { useGame } from '../../src/context/GameContext';
+import { analyzeWine } from '../../src/services/wine-analyzer';
+import { COLORS } from '../../src/constants/theme';
 
 const CARD_HEIGHT = 260;
 
@@ -17,7 +17,6 @@ export default function AnalyzingScreen() {
   const fillAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Subtle pulse on the card
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, { toValue: 1.03, duration: 1000, useNativeDriver: true }),
@@ -25,23 +24,19 @@ export default function AnalyzingScreen() {
       ])
     ).start();
 
-    // Wine pour fill - 3 phases like a real pour
     Animated.sequence([
-      // 1. Initial splash - wine hits the bottom
       Animated.timing(fillAnim, {
         toValue: CARD_HEIGHT * 0.1,
         duration: 400,
         easing: Easing.out(Easing.quad),
         useNativeDriver: false,
       }),
-      // 2. Settle - liquid settles after splash
       Animated.timing(fillAnim, {
         toValue: CARD_HEIGHT * 0.06,
         duration: 200,
         easing: Easing.inOut(Easing.quad),
         useNativeDriver: false,
       }),
-      // 3. Steady pour - consistent stream filling up
       Animated.timing(fillAnim, {
         toValue: CARD_HEIGHT * 0.7,
         duration: 5000,
@@ -65,7 +60,6 @@ export default function AnalyzingScreen() {
         setStatus('Consulting the sommelier...');
         const analysis = await analyzeWine(base64);
 
-        // Top off the glass - spring gives a natural overshoot + settle
         Animated.spring(fillAnim, {
           toValue: CARD_HEIGHT,
           tension: 50,
@@ -97,7 +91,6 @@ export default function AnalyzingScreen() {
 
       <View style={styles.cardWrapper}>
         <Animated.View style={[styles.card, { transform: [{ scale: pulseAnim }] }]}>
-          {/* Wine pour fill - rises from bottom */}
           {wineImage && (
             <Animated.View style={[styles.fillContainer, { height: fillAnim }]}>
               <Image

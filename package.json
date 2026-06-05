@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.29",
+    "@expo-google-fonts/pacifico": "^0.4.1",
     "@expo-google-fonts/sacramento": "^0.4.1",
     "ai": "^6.0.90",
     "expo": "~54.0.33",
