@@ -5,17 +5,17 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { useGame } from '../src/context/GameContext';
-import { COLORS } from '../src/constants/theme';
-import { PlayerGuess } from '../src/types';
+import { useGame } from '../../src/context/GameContext';
+import { COLORS } from '../../src/constants/theme';
+import { PlayerGuess } from '../../src/types';
 
 type Phase = 'ready' | 'playing' | 'timesup' | 'passing';
 
 const WINE_ICONS: Record<string, any> = {
-  red: require('../assets/icons/icon-wine-red.png'),
-  white: require('../assets/icons/icon-wine-white.png'),
-  sparkling: require('../assets/icons/icon-champagne.png'),
-  'rosé': require('../assets/icons/icon-wine-red.png'),
+  red: require('../../assets/icons/icon-wine-red.png'),
+  white: require('../../assets/icons/icon-wine-white.png'),
+  sparkling: require('../../assets/icons/icon-champagne.png'),
+  'rosé': require('../../assets/icons/icon-wine-red.png'),
 };
 
 export default function GameScreen() {
@@ -163,7 +163,7 @@ export default function GameScreen() {
     return (
       <Animated.View style={[styles.overlay, { opacity: fadeAnim }]}>
         <StatusBar barStyle="light-content" />
-        <Image source={require('../assets/icons/icon-phone.png')} style={styles.overlayIcon} resizeMode="contain" />
+        <Image source={require('../../assets/icons/icon-phone.png')} style={styles.overlayIcon} resizeMode="contain" />
         <Text style={styles.overlayTitle}>Pass the phone to</Text>
         <Text style={styles.overlayName}>{nextP?.name}</Text>
         <TouchableOpacity style={styles.readyBtn} onPress={nextPlayer} activeOpacity={0.8}>
@@ -197,7 +197,7 @@ export default function GameScreen() {
           </View>
         )}
         <View style={styles.sectionRow}>
-          <Image source={require('../assets/icons/icon-nose.png')} style={styles.sectionIcon} resizeMode="contain" />
+          <Image source={require('../../assets/icons/icon-nose.png')} style={styles.sectionIcon} resizeMode="contain" />
           <View style={styles.sectionTextWrap}>
             <Text style={styles.sectionLabel}>Nose (Aromas)</Text>
           </View>
@@ -219,7 +219,7 @@ export default function GameScreen() {
         </View>
 
         <View style={styles.sectionRow}>
-          <Image source={require('../assets/icons/icon-flavors.png')} style={styles.sectionIcon} resizeMode="contain" />
+          <Image source={require('../../assets/icons/icon-flavors.png')} style={styles.sectionIcon} resizeMode="contain" />
           <View style={styles.sectionTextWrap}>
             <Text style={styles.sectionLabel}>Palate (Flavors)</Text>
           </View>
@@ -241,7 +241,7 @@ export default function GameScreen() {
         </View>
 
         <View style={styles.sectionRow}>
-          <Image source={require('../assets/icons/icon-body.png')} style={styles.sectionIcon} resizeMode="contain" />
+          <Image source={require('../../assets/icons/icon-body.png')} style={styles.sectionIcon} resizeMode="contain" />
           <View style={styles.sectionTextWrap}>
             <Text style={styles.sectionLabel}>Body</Text>
             <Text style={styles.sectionHint}>How heavy does the wine feel in your mouth?</Text>
@@ -265,7 +265,7 @@ export default function GameScreen() {
         {isRed && (
           <>
             <View style={styles.sectionRow}>
-              <Image source={require('../assets/icons/icon-tannins.png')} style={styles.sectionIcon} resizeMode="contain" />
+              <Image source={require('../../assets/icons/icon-tannins.png')} style={styles.sectionIcon} resizeMode="contain" />
               <View style={styles.sectionTextWrap}>
                 <Text style={styles.sectionLabel}>Tannins</Text>
                 <Text style={styles.sectionHint}>That dry, gripping feeling on your tongue and gums.</Text>
@@ -289,7 +289,7 @@ export default function GameScreen() {
         )}
 
         <View style={styles.sectionRow}>
-          <Image source={require('../assets/icons/icon-acidity.png')} style={styles.sectionIcon} resizeMode="contain" />
+          <Image source={require('../../assets/icons/icon-acidity.png')} style={styles.sectionIcon} resizeMode="contain" />
           <View style={styles.sectionTextWrap}>
             <Text style={styles.sectionLabel}>Acidity</Text>
             <Text style={styles.sectionHint}>How much does it make your mouth water?</Text>
@@ -311,7 +311,7 @@ export default function GameScreen() {
         </View>
 
         <View style={styles.sectionRow}>
-          <Image source={require('../assets/icons/icon-tongue.png')} style={styles.sectionIcon} resizeMode="contain" />
+          <Image source={require('../../assets/icons/icon-tongue.png')} style={styles.sectionIcon} resizeMode="contain" />
           <View style={styles.sectionTextWrap}>
             <Text style={styles.sectionLabel}>Finish</Text>
             <Text style={styles.sectionHint}>How long does the flavor linger after you swallow?</Text>

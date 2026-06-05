@@ -1,20 +1,20 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, StatusBar, Image, ImageSourcePropType } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { useGame } from '../src/context/GameContext';
-import { COLORS } from '../src/constants/theme';
-import FeedbackButton from '../src/components/FeedbackButton';
+import { useGame } from '../../src/context/GameContext';
+import { COLORS } from '../../src/constants/theme';
+import FeedbackButton from '../../src/components/FeedbackButton';
 
 const MEDAL_ICONS: (ImageSourcePropType | null)[] = [
-  require('../assets/icons/icon-medal-gold.png'),
+  require('../../assets/icons/icon-medal-gold.png'),
   null,
   null,
 ];
 
 const WINE_ICONS: Record<string, ImageSourcePropType> = {
-  red: require('../assets/icons/icon-wine-red.png'),
-  white: require('../assets/icons/icon-wine-white.png'),
-  sparkling: require('../assets/icons/icon-champagne.png'),
+  red: require('../../assets/icons/icon-wine-red.png'),
+  white: require('../../assets/icons/icon-wine-white.png'),
+  sparkling: require('../../assets/icons/icon-champagne.png'),
 };
 
 export default function ResultsScreen() {
@@ -27,7 +27,7 @@ export default function ResultsScreen() {
   const playAgain = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     resetGame();
-    router.dismissAll();
+    router.replace('/home');
   };
 
   return (
