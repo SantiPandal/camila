@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import { Audio } from 'expo-av';
 import { useGame } from '../../src/context/GameContext';
 import { COLORS } from '../../src/constants/theme';
 import { PlayerGuess } from '../../src/types';
@@ -37,6 +38,26 @@ export default function GameScreen() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const tickSound = useRef<Audio.Sound | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+      const { sound } = await Audio.Sound.createAsync(require('../../assets/tick.wav'));
+      if (active) tickSound.current = sound;
+      else sound.unloadAsync();
+    })();
+    return () => {
+      active = false;
+      tickSound.current?.unloadAsync();
+      tickSound.current = null;
+    };
+  }, []);
+
+  const playTick = useCallback(() => {
+    tickSound.current?.replayAsync().catch(() => {});
+  }, []);
 
   const currentPlayer = players[currentPlayerIndex];
   const isRed = wineAnalysis?.wine_type === 'red';
@@ -77,7 +98,12 @@ export default function GameScreen() {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
           return 0;
         }
-        if (prev <= 6) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        if (prev <= 10) {
+          playTick();
+          Haptics.impactAsync(
+            prev <= 4 ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light
+          );
+        }
         return prev - 1;
       });
     }, 1000);
@@ -176,26 +202,28 @@ export default function GameScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
+
+      <View style={styles.header}>
+        <Text style={styles.playerName}>{currentPlayer?.name}</Text>
+        <Animated.View style={[
+          styles.timerBadge,
+          timeLeft <= 10 && styles.timerDanger,
+          { transform: [{ scale: timeLeft <= 5 ? pulseAnim : 1 }] },
+        ]}>
+          <Text style={[styles.timerText, timeLeft <= 10 && styles.timerDangerText]}>
+            {timeLeft}s
+          </Text>
+        </Animated.View>
+      </View>
+
+      {phase === 'timesup' && (
+        <View style={styles.timesUpBanner}>
+          <Text style={styles.timesUpText}>Time's up!</Text>
+        </View>
+      )}
+
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
-        <View style={styles.header}>
-          <Text style={styles.playerName}>{currentPlayer?.name}</Text>
-          <Animated.View style={[
-            styles.timerBadge,
-            timeLeft <= 10 && styles.timerDanger,
-            { transform: [{ scale: timeLeft <= 5 ? pulseAnim : 1 }] },
-          ]}>
-            <Text style={[styles.timerText, timeLeft <= 10 && styles.timerDangerText]}>
-              {timeLeft}s
-            </Text>
-          </Animated.View>
-        </View>
-
-        {phase === 'timesup' && (
-          <View style={styles.timesUpBanner}>
-            <Text style={styles.timesUpText}>Time's up!</Text>
-          </View>
-        )}
         <View style={styles.sectionRow}>
           <Image source={require('../../assets/icons/icon-nose.png')} style={styles.sectionIcon} resizeMode="contain" />
           <View style={styles.sectionTextWrap}>
