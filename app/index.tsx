@@ -29,6 +29,12 @@ export default function HubScreen() {
           <Text style={styles.cardTitle}>Ambisiosa</Text>
           <Text style={styles.cardDesc}>Cubilete — Marcador</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.card, styles.cardRaqueta]} onPress={() => openApp('/raqueta')} activeOpacity={0.8}>
+          <Text style={styles.cardEmoji}>🎾</Text>
+          <Text style={styles.cardTitle}>Raqueta</Text>
+          <Text style={styles.cardDesc}>Reserva automática de canchas</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -72,6 +78,10 @@ const styles = StyleSheet.create({
   cardAmbiciosa: {
     backgroundColor: 'rgba(13,59,37,0.4)',
     borderColor: 'rgba(13,59,37,0.6)',
+  },
+  cardRaqueta: {
+    backgroundColor: 'rgba(201,111,76,0.25)',
+    borderColor: 'rgba(201,111,76,0.5)',
   },
   cardEmoji: {
     fontSize: 48,
