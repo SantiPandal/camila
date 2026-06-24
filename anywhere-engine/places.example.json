@@ -1,0 +1,5 @@
+[
+  { "id": "p_casa", "label": "Casa", "lat": 19.4326, "lng": -99.1332 },
+  { "id": "p_oficina", "label": "Oficina", "lat": 19.4284, "lng": -99.2007 },
+  { "id": "p_gym", "label": "Gym", "lat": 19.4079, "lng": -99.1759 }
+]

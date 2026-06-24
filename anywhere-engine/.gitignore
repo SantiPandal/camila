@@ -1,0 +1,10 @@
+# Runtime secrets + state — NEVER commit (emails, home/work coordinates, live location)
+accounts.json
+places.json
+state.json
+
+# logs
+*.log
+
+# deps (engine is zero-dep, but just in case)
+node_modules/
