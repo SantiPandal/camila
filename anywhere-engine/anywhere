@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+/*
+ * `anywhere` — CLI for the Anywhere location system. The interface OpenClaw (or any
+ * agent) uses to control it. Thin client over the engine HTTP API.
+ *
+ * Usage:
+ *   anywhere list                       # accounts + status (online/offline/booting)
+ *   anywhere places                     # saved places
+ *   anywhere enable  <person>           # boot that person's emulator (waits until ready)
+ *   anywhere disable <person>           # shut it down to free RAM
+ *   anywhere set     <person> <place>           # set to a saved place (by name)
+ *   anywhere set     <person> <lat> <lng>       # set to raw coords
+ *   anywhere on      <person> <place|lat lng>    # enable + set in one shot
+ *   anywhere off     <person>           # alias for disable
+ *
+ * <person> matches an account id or label (case-insensitive), e.g. "Santi".
+ * Engine URL: $ANYWHERE_API_URL or http://localhost:8787
+ */
+const BASE = (process.env.ANYWHERE_API_URL || 'http://localhost:8787').replace(/\/$/, '');
+
+async function api(method, p, body) {
+  const res = await fetch(`${BASE}${p}`, {
+    method,
+    headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+    body: body ? JSON.stringify(body) : undefined,
+  }).catch(() => {
+    throw new Error(`engine unreachable at ${BASE} (is it running? is the right ANYWHERE_API_URL set?)`);
+  });
+  const text = await res.text();
+  let json;
+  try {
+    json = text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error(`bad response ${res.status}: ${text.slice(0, 120)}`);
+  }
+  if (!res.ok) throw new Error(json.error || `${res.status}`);
+  return json;
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function resolvePlace(person, name) {
+  const places = await api('GET', '/places');
+  const p = places.find((x) => x.label.toLowerCase() === name.toLowerCase() || x.id === name);
+  if (!p) throw new Error(`unknown place "${name}". Known: ${places.map((x) => x.label).join(', ') || '(none)'}`);
+  return p;
+}
+
+async function waitOnline(person, timeoutMs = 130000) {
+  const t0 = Date.now();
+  process.stderr.write(`booting ${person}'s emulator`);
+  while (Date.now() - t0 < timeoutMs) {
+    const acct = (await api('GET', '/accounts')).find(matcher(person));
+    if (!acct) throw new Error(`unknown account "${person}"`);
+    if (acct.online) {
+      process.stderr.write(' ✓\n');
+      return acct;
+    }
+    process.stderr.write('.');
+    await sleep(3000);
+  }
+  throw new Error('timed out waiting for emulator to boot');
+}
+
+const matcher = (person) => (a) =>
+  a.id === person || (a.label && a.label.toLowerCase() === String(person).toLowerCase());
+
+async function setLoc(person, args) {
+  const accts = await api('GET', '/accounts');
+  const acct = accts.find(matcher(person));
+  if (!acct) throw new Error(`unknown account "${person}". Known: ${accts.map((a) => a.label).join(', ')}`);
+  let lat, lng, placeId, label;
+  if (args.length === 1) {
+    const p = await resolvePlace(person, args[0]);
+    ({ lat, lng } = p);
+    placeId = p.id;
+    label = p.label;
+  } else {
+    lat = parseFloat(args[0]);
+    lng = parseFloat(args[1]);
+    if (Number.isNaN(lat) || Number.isNaN(lng)) throw new Error('bad coords');
+    label = `${lat},${lng}`;
+  }
+  const r = await api('POST', '/set-location', { accountId: acct.id, lat, lng, placeId });
+  console.log(`${r.label} → ${label}`);
+  return r;
+}
+
+function printAccounts(list) {
+  if (!list.length) return console.log('(no accounts)');
+  for (const a of list) {
+    const dot = a.booting ? '◐ booting' : a.online ? '● online ' : '○ offline';
+    const loc = a.current ? ` @ ${a.current.placeId || `${a.current.lat},${a.current.lng}`}` : '';
+    console.log(`${dot}  ${a.label}${loc}`);
+  }
+}
+
+(async () => {
+  const [cmd, person, ...rest] = process.argv.slice(2);
+  try {
+    switch (cmd) {
+      case 'list':
+      case 'status':
+        return printAccounts(await api('GET', '/accounts'));
+      case 'places':
+        return (await api('GET', '/places')).forEach((p) => console.log(`${p.label}  ${p.lat},${p.lng}`));
+      case 'enable':
+        await api('POST', '/enable', { accountId: person });
+        await waitOnline(person);
+        return console.log(`${person} enabled`);
+      case 'disable':
+      case 'off':
+        await api('POST', '/disable', { accountId: person });
+        return console.log(`${person} disabled (RAM freed)`);
+      case 'set':
+        return void (await setLoc(person, rest));
+      case 'login': {
+        process.stderr.write(`logging in ${person} (boot + drive Life360)…\n`);
+        const r = await api('POST', '/login', { accountId: person });
+        if (r.state === 'logged_in') return console.log(`${person}: already logged in`);
+        return console.log(`${person}: code sent to email → run:  anywhere code ${person} <6-digit-code>`);
+      }
+      case 'code': {
+        const digits = (rest[0] || '').replace(/\D/g, '');
+        if (!digits) throw new Error('usage: anywhere code <person> <code>');
+        const r = await api('POST', '/submit-code', { accountId: person, code: digits });
+        return console.log(`${person}: ${r.state}`);
+      }
+      case 'on': // enable + set in one shot
+        await api('POST', '/enable', { accountId: person });
+        await waitOnline(person);
+        return void (await setLoc(person, rest));
+      default:
+        console.log('usage: anywhere list|places|enable|disable|set|on|off  <person> [place|lat lng]');
+        process.exit(cmd ? 1 : 0);
+    }
+  } catch (e) {
+    console.error(`error: ${e.message}`);
+    process.exit(1);
+  }
+})();

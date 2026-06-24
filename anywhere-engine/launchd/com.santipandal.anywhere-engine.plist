@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- LaunchAgent: runs in Santiago's GUI session so the Android emulators have graphics
+     (same requirement as the raqueta snipe daemon). Install via ./install.sh, which
+     loads it with `launchctl bootstrap gui/$(id -u)`. Keep the Mac mini set to
+     auto-login this user + never sleep. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.santipandal.anywhere-engine</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/santipandal/conductor/repos/camila/anywhere-engine/run-engine.sh</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>/Users/santipandal</string>
+    <key>ANDROID_SDK_ROOT</key>
+    <string>/opt/homebrew/share/android-commandlinetools</string>
+    <key>ANDROID_HOME</key>
+    <string>/opt/homebrew/share/android-commandlinetools</string>
+    <key>JAVA_HOME</key>
+    <string>/opt/homebrew/opt/openjdk@17</string>
+    <key>PORT</key>
+    <string>8787</string>
+    <!-- idle emulator auto-shutoff in minutes; 0 disables -->
+    <key>ANYWHERE_IDLE_MIN</key>
+    <string>90</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/santipandal/conductor/repos/camila/anywhere-engine</string>
+  <key>StandardOutPath</key>
+  <string>/Users/santipandal/conductor/repos/camila/anywhere-engine/engine.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/santipandal/conductor/repos/camila/anywhere-engine/engine.log</string>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

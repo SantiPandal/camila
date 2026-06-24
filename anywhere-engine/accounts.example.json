@@ -1,0 +1,14 @@
+[
+  {
+    "id": "a_santi",
+    "label": "Santi",
+    "token": "PASTE_BEARER_TOKEN_FROM_setup-account.js",
+    "deviceId": "PASTE_DEVICE_ID_FROM_setup-account.js"
+  },
+  {
+    "id": "a_p2",
+    "label": "Persona 2",
+    "token": "...",
+    "deviceId": "..."
+  }
+]

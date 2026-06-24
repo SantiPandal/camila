@@ -1,0 +1,11 @@
+{
+  "name": "anywhere-engine",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Mac mini engine for the Anywhere mini-app: pushes location into Life360 via the reverse-engineered write API. Zero dependencies.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "setup": "node setup-account.js"
+  }
+}
